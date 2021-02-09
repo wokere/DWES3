@@ -5,7 +5,7 @@ class ActorModel extends Model{
 
     protected $table = 'actores';
     protected $primaryKey = 'id';
-    protected $allowedFields = ['id','nombre','anyoNacimiento','Pais'];
+    protected $allowedFields = ['id','nombre','anyoNacimiento','pais'];
     protected $useAutoIncrement = true;
 
    function getRelated($idPelicula){

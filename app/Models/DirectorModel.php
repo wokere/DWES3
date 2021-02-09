@@ -5,7 +5,7 @@ class DirectorModel extends Model{
 
     protected $table = 'directores';
     protected $primaryKey = 'id';
-    protected $allowedFields = ['id','nombre','anyoNacimiento','pais'];
+    protected $allowedFields = ['id','nombre','anyoNacimiento','Pais'];
 
     function getRelated($idPelicula){
 
@@ -14,7 +14,5 @@ class DirectorModel extends Model{
 
         return $query->getResult('array');
     }
-
-
 }
 ?>

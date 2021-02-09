@@ -40,4 +40,9 @@ class Validation
 	//--------------------------------------------------------------------
 	// Rules
 	//--------------------------------------------------------------------
+	public $profesional = [
+		'nombre' => 'required',
+		'anyoNacimiento'=> 'required',
+		'Pais'=>'required'
+	];
 }

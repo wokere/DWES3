@@ -6,6 +6,11 @@ use App\Models\DirectoresModel;
 
 class Peliculas extends ResourceController
 {
+    function __construct(){
+       $this->load->helper(array('genericResponse','url'));
+    
+    }
     protected $modelName ="App\Models\PeliculasModel";
     protected $format = "json";
+
 }?>
