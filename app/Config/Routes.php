@@ -35,6 +35,8 @@ $routes->setAutoRoute(true);
 //$routes->get('/', 'Home::index');
 $routes->resource('actores');
 $routes->resource('directores');
+$routes->resource('peliculas');
+
 
 
 /*
