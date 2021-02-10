@@ -1,4 +1,4 @@
-#Config BBDD:
+# Config BBDD:
 
 La tienes en el .env, no en la clase Database.
 wokere 12345
