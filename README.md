@@ -1,3 +1,12 @@
+# Config BBDD:
+
+La tienes en el .env, no en la clase Database.
+wokere 12345
+
+La base de datos la modifiqué para tuviera autoincrement en el id. 
+No tengo muy claro si eso se debe hacer con la clave primaria... 
+
+
 # CodeIgniter 4 Framework
 
 ## What is CodeIgniter?
