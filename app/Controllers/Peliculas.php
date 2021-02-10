@@ -25,12 +25,38 @@ class Peliculas extends ResourceController
         return $this->genericResponse($datosDefinitivos,null,200);
 
     }
-
     function show($id=null){
 
         return $this->genericResponse($this->getMappedFilmData($id),null,200);        
     }
 
+    function delete($id=null){
+        $this->model->delete($id);
+        return $this->genericResponse("Pelicula Eliminada",null,200);
+    }
+    function create(){
+
+        if($this->validate("pelicula")){
+            $id = $this->model->insert($this->request->getPost());
+            return $this->genericResponse($this->model->find($id),null,200);
+        }
+        $validation = \config\Services::validation();
+        return $this->genericResponse(null,$validation->getErrors(),500);
+    }
+    function update($id=null){
+
+        if(!$this->model->find($id)){
+            return $this->genericResponse(null,array("id"=>"La pelicula no existe"),500);
+        }
+        $datos = $this->request->getRawInput();
+        if($this->validate('pelicula')){
+            $this->model->update($id,$datos);
+            return $this->genericResponse($this->model->find($id),null,200);
+        }
+        $validation = \config\Services::validation();
+        return $this->genericResponse(null,$validation->getErrors(),500);   
+    }
+    
     private function getMappedFilmData ($id) {
 
         $peli = $this->model->find($id);

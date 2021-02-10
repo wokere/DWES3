@@ -18,3 +18,4 @@ if(!function_exists('linksHATEOAS')){
     }
 }
 
+?>

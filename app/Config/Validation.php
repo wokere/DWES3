@@ -45,4 +45,9 @@ class Validation
 		'anyoNacimiento'=> 'required',
 		'Pais'=>'required'
 	];
+	public $pelicula = [
+		'titulo'=>'required',
+		'anyo' => 'required',
+		'duracion'=>'required'
+	];
 }

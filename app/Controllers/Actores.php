@@ -34,7 +34,6 @@ class Actores extends ResourceController
     public function create(){
         //esto valida los request por osmosis?!
         if($this->validate('profesional')){
-         //No guarda el país...
             $id = $this->model->insert($this->request->getPost());
             return $this->genericResponse($this->model->find($id),null,200);
         }
