@@ -6,6 +6,7 @@ class ActorModel extends Model{
     protected $table = 'actores';
     protected $primaryKey = 'id';
     protected $allowedFields = ['id','nombre','anyoNacimiento','Pais'];
+    //lo hace sin necesidad de ponerlo
     protected $useAutoIncrement = true;
 
    function getRelated($idPelicula){
