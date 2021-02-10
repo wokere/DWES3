@@ -14,17 +14,19 @@ class Actores extends ResourceController
     //index,show,update,... son los metodos q usara resource para la ruta
     //si no los encuentra cuando se hace la peticion pues no funcionara y te dira
     //que no está implementado
-    
-    //GET
+
     public function index()
     {  
         $actores= $this->model->findAll();
-        $completeActores = $this->map($actores);
+        $completeActores = $this->mapAll($actores);
         return $this->genericResponse($completeActores,null,200);
     }
     public function show($id=null){
-        $actor = $this->model->where('id',$id)->findAll();
-        $completeActor = $this->map($actor);
+        if(!$this->model->find($id)){
+            return $this->genericResponse(null,array("id"=>"el Actor no existe"),500);
+        }
+        $actor = $this->model->find($id);
+        $completeActor = $this->getSingleActorMapped($actor);
         return $this->genericResponse($completeActor,null,200);
     }
     public function delete($id=null){
@@ -32,7 +34,6 @@ class Actores extends ResourceController
         return $this->genericResponse("Actor Eliminado",null,200);
     }
     public function create(){
-        //esto valida los request por osmosis?!
         if($this->validate('profesional')){
             $id = $this->model->insert($this->request->getPost());
             return $this->genericResponse($this->model->find($id),null,200);
@@ -42,7 +43,7 @@ class Actores extends ResourceController
     }
          public function update($id=null){
         if(!$this->model->find($id)){
-            return $this->genericResponse(null,array("id"=>"el jugaodr no existe"),500);
+            return $this->genericResponse(null,array("id"=>"el Actor no existe"),500);
         }
         $datos = $this->request->getRawInput();
         if($this->validate('profesional')){
@@ -55,24 +56,23 @@ class Actores extends ResourceController
         return $this->genericResponse(null,$validation->getErrors(),500);   
     }
     //aux
-    public function map($data)
+    private function mapAll($actores){
+        $datos = [];
+        foreach($actores as $actor){
+            $mappedData = $this->getSingleActorMapped($actor);
+            array_push($datos,$mappedData);
+        }
+        return $datos;
+    }
+    private function getSingleActorMapped($actor)
     {
-        $actores = [];
-        foreach ($data as $actor) {
             $temAct = [];
             foreach ($actor as $key=>$value) {
                 $temAct[$key] = $value;
             }
-            $temAct['links'] = [
-                ["rel"=>"self","href"=>url("/actores/".$actor['id']),"action"=>"GET","types"=>["text/xml","application/json"]],
-                ["rel"=>"self","href"=>url("/actores/".$actor['id']),"action"=>"PUT","types"=>["application/x-www-form-encoded"]],
-                ["rel"=>"self","href"=>url("/actores/".$actor['id']),"action"=>"PATCH","types"=>["application/x-www-form-encoded"]],
-                ["rel"=>"self","href"=>url("/actores/".$actor['id']),"action"=>"DELETE","types"=>["application/x-www-form-encoded"]]
-            ];
-            
-            array_push($actores, $temAct);
-        }
-        return $actores;
+            $temAct['links'] = linksHATEOAS(url("/actores/".$actor['id']),"self") ;
+        
+        return $temAct;
     }
     function genericResponse($dato, $msg, $code)
     {

@@ -15,18 +15,16 @@ class Peliculas extends ResourceController
     function index(){
         //sacamos todas las pelis
         $pelis = $this->model->findAll();
-        $datosDefinitivos = [];
-        foreach($pelis as $peli){
-            $mappedData = $this->getMappedFilmData($peli['id']);
-            array_push($datosDefinitivos,$mappedData);
-        }
-        //poner o no poner... mirar nba
-        $datosDefinitivos['links'] =  ["rel"=>"self","href"=>url("/peliculas/"),"action"=>"GET","types"=>["text/xml","application/json"]];
+        $datosDefinitivos = $this->mapAll($pelis);
+        //poner o no poner... 
+        //$datosDefinitivos['links'] =  ["rel"=>"self","href"=>url("/peliculas/"),"action"=>"GET","types"=>["text/xml","application/json"]];
         return $this->genericResponse($datosDefinitivos,null,200);
 
     }
     function show($id=null){
-
+        if(!$this->model->find($id)){
+            return $this->genericResponse(null,array("id"=>"La pelicula no existe"),500);
+        }
         return $this->genericResponse($this->getMappedFilmData($id),null,200);        
     }
 
@@ -35,8 +33,8 @@ class Peliculas extends ResourceController
         return $this->genericResponse("Pelicula Eliminada",null,200);
     }
     function create(){
-
         if($this->validate("pelicula")){
+            //deberia tb mirar si ha indicado ids de actores o directores para meterlo en peliculas_actor/director?
             $id = $this->model->insert($this->request->getPost());
             return $this->genericResponse($this->model->find($id),null,200);
         }
@@ -58,16 +56,21 @@ class Peliculas extends ResourceController
     }
     
     private function getMappedFilmData ($id) {
-
         $peli = $this->model->find($id);
         $actorespeli = (new ActorModel())->getRelated($id);
         $directorespeli = (new DirectorModel())->getRelated($id);
         $mappedData = $this->mapSingleFilm($peli,$actorespeli,$directorespeli);
         return $mappedData;
     }
-
-    //AUX helper
-    public function mapSingleFilm($dataFilm,$dataActores,$dataDirector)
+    private function mapAll($pelis){
+        $datos = [];
+        foreach($pelis as $peli){
+            $mappedData = $this->getMappedFilmData($peli['id']);
+            array_push($datos,$mappedData);
+        }
+        return $datos;
+    }
+    private function mapSingleFilm($dataFilm,$dataActores,$dataDirector)
     {
             $temPeli = [];
             foreach ($dataFilm as $key=>$value) {
@@ -94,7 +97,7 @@ class Peliculas extends ResourceController
         }
         return $temArr;
     }
-    function genericResponse($dato, $msg, $code)
+    private function genericResponse($dato, $msg, $code)
     {
         if ($code == 200) {
             return $this->respond(array(
