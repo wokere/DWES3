@@ -43,8 +43,8 @@ class directores extends ResourceController
             $id = $this->model->insert($this->request->getPost());
             return $this->genericResponse($this->model->find($id), null, 200);
         }
-        $validation = \config\Services::validation();
-        return $this->genericResponse(null, $validation->getErrors(), 500);
+      //  $validation = \config\Services::validation();
+        return $this->genericResponse(null, $this->validator->getErrors(), 500);
     }
     public function update($id=null)
     {
@@ -57,8 +57,8 @@ class directores extends ResourceController
             $this->model->update($id, $datos);
             return $this->genericResponse($this->model->find($id), null, 200);
         }
-        $validation = \config\Services::validation();
-        return $this->genericResponse(null, $validation->getErrors(), 500);
+       // $validation = \config\Services::validation();
+        return $this->genericResponse(null,$this->validator->getErrors(), 500);
     }
     //aux
     private function mapAll($directores){

@@ -38,8 +38,8 @@ class Peliculas extends ResourceController
             $id = $this->model->insert($this->request->getPost());
             return $this->genericResponse($this->model->find($id),null,200);
         }
-        $validation = \config\Services::validation();
-        return $this->genericResponse(null,$validation->getErrors(),500);
+       // $validation = \config\Services::validation();
+        return $this->genericResponse(null,$this->validator->getErrors(),500);
     }
     function update($id=null){
 
@@ -51,8 +51,9 @@ class Peliculas extends ResourceController
             $this->model->update($id,$datos);
             return $this->genericResponse($this->model->find($id),null,200);
         }
-        $validation = \config\Services::validation();
-        return $this->genericResponse(null,$validation->getErrors(),500);   
+        //el controlador ya trae ese servicio de serie
+       // $validation = \config\Services::validation();
+       return $this->genericResponse(null,$this->validator->getErrors(),500);
     }
     
     private function getMappedFilmData ($id) {
