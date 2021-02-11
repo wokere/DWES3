@@ -41,13 +41,13 @@ class Validation
 	// Rules
 	//--------------------------------------------------------------------
 	public $profesional = [
-		'nombre' => 'required',
-		'anyoNacimiento'=> 'required',
-		'Pais'=>'required'
+		'nombre' => 'required|min_length[1]|max_length[50]',
+		'anyoNacimiento'=> 'required|min_length[4]|max_length[4]',
+		'Pais'=>'required|min_length[2]|max_length[50]'
 	];
 	public $pelicula = [
-		'titulo'=>'required',
-		'anyo' => 'required',
-		'duracion'=>'required'
+		'titulo'=>'required|min_length[1]|max_length[50]',
+		'anyo' => 'required|min_length[4]|max_length[4]',
+		'duracion'=>'required|min_length[1]|max_length[50]'
 	];
 }
