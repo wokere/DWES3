@@ -47,11 +47,14 @@ class Peliculas extends ResourceController
             return $this->genericResponse(null,array("id"=>"La pelicula no existe"),500);
         }
         $datos = $this->request->getRawInput();
+        //The validate() method only returns true if it has successfully applied your rules without any of them failing.
         if($this->validate('pelicula')){
             $this->model->update($id,$datos);
             return $this->genericResponse($this->model->find($id),null,200);
         }
-        //el controlador ya trae ese servicio de serie
+        //el controlador ya trae sus metodos para validar
+        //https://codeigniter4.github.io/userguide/libraries/validation.html
+        //https://codeigniter4.github.io/userguide/incoming/controllers.html#validating-data
        // $validation = \config\Services::validation();
        return $this->genericResponse(null,$this->validator->getErrors(),500);
     }
