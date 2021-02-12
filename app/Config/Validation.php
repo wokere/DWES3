@@ -54,7 +54,9 @@ class Validation
 		'titulo'=>'required|min_length[1]|max_length[50]',
 		'anyo' => 'required|min_length[4]|max_length[4]',
 		'duracion'=>'required|min_length[1]|max_length[50]',
-		'actores.*' =>'required',
-		'id_director'=>'required'
+		'actores.*' =>'required_without[id_director]',
+		'id_director' =>'required_without[actores]',
+
 	];
+
 }
