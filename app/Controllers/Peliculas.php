@@ -3,6 +3,8 @@ use CodeIgniter\RESTful\ResourceController;
 use App\Models\PeliculaModel;
 use App\Models\ActorModel;
 use App\Models\DirectorModel;
+use App\Models\PeliculaActorModel;
+use App\Models\PeliculaDirectorModel;
 
 class Peliculas extends ResourceController
 {
@@ -33,9 +35,24 @@ class Peliculas extends ResourceController
         return $this->genericResponse("Pelicula Eliminada",null,200);
     }
     function create(){
-        if($this->validate("pelicula")){
+        if($this->validate("peliculaNueva")){
             //deberia tb mirar si ha indicado ids de actores o directores para meterlo en peliculas_actor/director?
+            //ya no me vale el getPost porque ahora tendré q meter cada uno en un sitio...
             $id = $this->model->insert($this->request->getPost());
+            //insert directores en peliculas_directores
+            (new PeliculaDirectorModel())->insert([
+                'id_director'=> $this->request->getPost('id_director'),
+                'id_pelicula'=> $id
+            ]);
+            $idsactores = $this->request->getPost('actores');
+            $modelPelAct = new PeliculaActorModel();
+            foreach($idsactores as $idactor){
+                $modelPelAct->insert([
+                    'id_actor'=>$idactor,
+                    'id_pelicula'=>$id
+                ]);
+            }
+            //insert actores en peliculas_actores
             return $this->genericResponse($this->model->find($id),null,200);
         }
        // $validation = \config\Services::validation();
@@ -48,6 +65,8 @@ class Peliculas extends ResourceController
         }
         $datos = $this->request->getRawInput();
         //The validate() method only returns true if it has successfully applied your rules without any of them failing.
+        //aplicar otras reglas, no es obligatorio q lo rellenen todo, solo q los campos sean los q deban ser , y q los actores/directores
+        //ya existan
         if($this->validate('pelicula')){
             $this->model->update($id,$datos);
             return $this->genericResponse($this->model->find($id),null,200);

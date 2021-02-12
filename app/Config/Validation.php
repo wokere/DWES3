@@ -50,4 +50,11 @@ class Validation
 		'anyo' => 'required|min_length[4]|max_length[4]',
 		'duracion'=>'required|min_length[1]|max_length[50]'
 	];
+	public $peliculaNueva = [
+		'titulo'=>'required|min_length[1]|max_length[50]',
+		'anyo' => 'required|min_length[4]|max_length[4]',
+		'duracion'=>'required|min_length[1]|max_length[50]',
+		'actores.*' =>'required',
+		'id_director'=>'required'
+	];
 }
