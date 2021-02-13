@@ -41,16 +41,31 @@ class Validation
 	//--------------------------------------------------------------------
 	// Rules
 	//--------------------------------------------------------------------
-	public $profesional = [
-		'nombre' => 'required|min_length[1]|max_length[50]',
+	public $actorNuevo = [
+		'nombre' => 'required|is_unique[actores.nombre]|min_length[1]|max_length[50]',
 		'anyoNacimiento'=> 'required|min_length[4]|max_length[4]',
 		'Pais'=>'required|min_length[2]|max_length[50]'
 	];
+	public $actor = [
+		'nombre' => 'if_exist|is_unique[actores.nombre]|min_length[1]|max_length[50]',
+		'anyoNacimiento'=> 'if_exist|min_length[4]|max_length[4]',
+		'Pais'=>'if_exist|min_length[2]|max_length[50]'
+	];
+	public $directorNuevo = [
+		'nombre' => 'required|is_unique[directores.nombre]|min_length[1]|max_length[50]',
+		'anyoNacimiento'=> 'required|min_length[4]|max_length[4]',
+		'Pais'=>'required|min_length[2]|max_length[50]'
+	];
+	public $director = [
+		'nombre' => 'if_exist|is_unique[directores.nombre]|min_length[1]|max_length[50]',
+		'anyoNacimiento'=> 'if_exist|min_length[4]|max_length[4]',
+		'Pais'=>'if_exist|min_length[2]|max_length[50]'
+	];
 	public $pelicula = [
-		//aunque el is_not_unique aqui es un poco useless porque necesito hacer trim antes de mirar...
-		'titulo'=>'required|min_length[1]|max_length[50]|is_not_unique[peliculas.id]',
-		'anyo' => 'required|min_length[4]|max_length[4]',
-		'duracion'=>'required|min_length[1]|max_length[50]'
+		//aunque el is_unique aqui es un poco useless porque necesito hacer trim antes de mirar...
+		'titulo' => 'if_exist|is_unique[peliculas.titulo]|min_length[1]|max_length[50]',
+		'anyo' => 'if_exist|exact_length[4]',
+		'duracion'=>'if_exist|min_length[1]|max_length[50]'
 	];
 	public $peliculaNueva = [
 		'titulo'=>'required|min_length[1]|max_length[50]',

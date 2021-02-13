@@ -48,7 +48,6 @@ class Peliculas extends ResourceController
         //en lugar de create
         if ($this->validate("peliculaNueva")) {
             $trimmedPost = trimStringArray($this->request->getPost());
-            ///  $id = $this->model->insert($this->request->getPost());
             $id = $this->model->insert($trimmedPost);
             if ($this->request->getVar('id_director')) {
                 // hago trim también , aunque sin hacerlo ya lo hacia...pero por si algun dia cambia y no lo hace
@@ -77,24 +76,15 @@ class Peliculas extends ResourceController
     }
     public function update($id=null)
     {
-        //esto lo podria haber metido tb como regla no?
-        //trim id?
+        //lo comprobamos aqui y no en el validador porque no viene con el rawinput si no q se pasa por parametro al controlador ( o algo asi??)
         if (!$this->model->find($id)) {
             return $this->genericResponse(null, array("id"=>"La pelicula no existe"), 500);
         }
-        //& trim!
         $datos = $this->request->getRawInput();
-        //The validate() method only returns true if it has successfully applied your rules without any of them failing.
-        //aplicar otras reglas, no es obligatorio q lo rellenen todo, solo q los campos sean los q deban ser , y q los actores/directores
-        //ya existan
         if ($this->validate('pelicula')) {
-            $this->model->update($id, $datos);
-            return $this->genericResponse($this->model->find($id), null, 200);
+            $this->model->update($id,trimStringArray($datos));
+            return $this->show($id);
         }
-        //el controlador ya trae sus metodos para validar
-        //https://codeigniter4.github.io/userguide/libraries/validation.html
-        //https://codeigniter4.github.io/userguide/incoming/controllers.html#validating-data
-        // $validation = \config\Services::validation();
         return $this->genericResponse(null, $this->validator->getErrors(), 500);
     }
     

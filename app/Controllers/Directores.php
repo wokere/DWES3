@@ -39,8 +39,8 @@ class directores extends ResourceController
     }
     public function create()
     {
-        if ($this->validate('profesional')) {
-            $id = $this->model->insert($this->request->getPost());
+        if ($this->validate('directorNuevo')) {
+            $id = $this->model->insert(trimStringArray($this->request->getPost()));
             return $this->genericResponse($this->model->find($id), null, 200);
         }
       //  $validation = \config\Services::validation();
@@ -52,9 +52,8 @@ class directores extends ResourceController
             return $this->genericResponse(null, array("id"=>"el Director no existe"), 500);
         }
         $datos = $this->request->getRawInput();
-        if ($this->validate('profesional')) {
-            //tampoco guarda el país..
-            $this->model->update($id, $datos);
+        if ($this->validate('director')) {
+            $this->model->update($id, trimStringArray($datos));
             return $this->genericResponse($this->model->find($id), null, 200);
         }
        // $validation = \config\Services::validation();

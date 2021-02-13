@@ -37,8 +37,8 @@ class Actores extends ResourceController
     }
     public function create()
     {
-        if ($this->validate('profesional')) {
-            $id = $this->model->insert($this->request->getPost());
+        if ($this->validate('actorNuevo')) {
+            $id = $this->model->insert(trimStringArray($this->request->getPost()));
             return $this->genericResponse($this->model->find($id), null, 200);
         }
        // $validation = \config\Services::validation();
@@ -52,7 +52,7 @@ class Actores extends ResourceController
         $datos = $this->request->getRawInput();
         if ($this->validate('profesional')) {
             //tampoco guarda el país..
-            $this->model->update($id, $datos);
+            $this->model->update($id, trimStringArray($datos));
             return $this->genericResponse($this->model->find($id), null, 200);
         }
        // $validation = \config\Services::validation();
