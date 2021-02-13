@@ -47,16 +47,20 @@ class Peliculas extends ResourceController
         //tambien comprobamos que no exista la pelicula en la bbdd. Aunque creo que eso se solucionaria tambien usando save()
         //en lugar de create
         if ($this->validate("peliculaNueva")) {
+            //aunque haya validado al no dejar ya hacer trim hay q mirar que el titulo no exista ya en la bbdd...
             $trimmedPost = trimStringArray($this->request->getPost());
+            if($this->model->getByTitle($trimmedPost['titulo'])){
+                return $this->genericResponse(null, "la película ya existe", 500);
+            }
             $id = $this->model->insert($trimmedPost);
-            if ($this->request->getVar('id_director')) {
+            if ($this->request->getPost('id_director')) {
                 // hago trim también , aunque sin hacerlo ya lo hacia...pero por si algun dia cambia y no lo hace
                 (new PeliculaDirectorModel())->insert([
                     'id_director'=> trim($this->request->getPost('id_director')),
                     'id_pelicula'=> $id
                 ]);
             }
-            if ($this->request->getVar('actores')) {
+            if ($this->request->getPost('actores')) {
                 //eliminar ids repetidas de actores
                 $idsactores = $this->request->getPost('actores');
                 $modelPelAct = new PeliculaActorModel();

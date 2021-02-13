@@ -5,5 +5,9 @@ class PeliculaModel extends Model{
     protected $table = 'peliculas';
     protected $primaryKey = 'id';
     protected $allowedFields = ['titulo','anyo','duracion']; 
+
+    function getByTitle($titulo){
+        return $this->where('titulo',$titulo)->findAll();
+    }
 }
 ?>

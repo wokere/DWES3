@@ -50,8 +50,7 @@ class Actores extends ResourceController
             return $this->genericResponse(null, array("id"=>"el Actor no existe"), 500);
         }
         $datos = $this->request->getRawInput();
-        if ($this->validate('profesional')) {
-            //tampoco guarda el país..
+        if ($this->validate('actor')) {
             $this->model->update($id, trimStringArray($datos));
             return $this->genericResponse($this->model->find($id), null, 200);
         }

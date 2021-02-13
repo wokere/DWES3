@@ -28,5 +28,15 @@ if(!function_exists('trimStringArray')){
         return $tmpArr;
     }
 }
+/*function trimEmAll($array){
+    foreach($array as $key=>$value){
+        if(is_array($value)){
+            trimEmAll($value);
+        }else{
+            $array[$key] = trim($value);
+        }
+    }
+    return $array;
+}*/
 
 ?>
