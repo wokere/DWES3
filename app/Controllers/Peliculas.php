@@ -40,14 +40,20 @@ class Peliculas extends ResourceController
     }
     public function create()
     {
-        if ( $this->validate("peliculaNueva") ) {
-            //deberia tb mirar si ha indicado ids de actores o directores para meterlo en peliculas_actor/director?
-            //ya no me vale el getPost porque ahora tendré q meter cada uno en un sitio...
-            $id = $this->model->insert($this->request->getPost());
-            //validate, comprobar que exista
+        //como para indicar en las tablas de relacion la pelicula ya ha debido estar introducida
+        //debo comprobar primero si el id del actor o director existe antes de crear la pelicula para
+        //que no se de el caso de que, al no existir, cree la pelicula y luego de error al crear los otros,
+        //aprovecho las reglas de peliculaNueva para hacer la comprobación con una customRule
+        //tambien comprobamos que no exista la pelicula en la bbdd. Aunque creo que eso se solucionaria usando save()
+        //en lugar de create
+        if ($this->validate("peliculaNueva")) {
+            $trimmedPost = trimStringArray($this->request->getPost());
+            ///  $id = $this->model->insert($this->request->getPost());
+            $id = $this->model->insert($trimmedPost);
             if ($this->request->getVar('id_director')) {
+                // hago trim también , aunque sin hacerlo ya lo hacia...pero por si algun dia cambia y no lo hace
                 (new PeliculaDirectorModel())->insert([
-                    'id_director'=> $this->request->getPost('id_director'),
+                    'id_director'=> trim($this->request->getPost('id_director')),
                     'id_pelicula'=> $id
                 ]);
             }
@@ -56,7 +62,7 @@ class Peliculas extends ResourceController
                 $modelPelAct = new PeliculaActorModel();
                 foreach ($idsactores as $idactor) {
                     $modelPelAct->insert([
-                        'id_actor'=>$idactor,
+                        'id_actor'=>trim($idactor),
                         'id_pelicula'=>$id
                     ]);
                 }
@@ -70,9 +76,12 @@ class Peliculas extends ResourceController
     }
     public function update($id=null)
     {
+        //esto lo podria haber metido tb como regla no?
+        //trim id?
         if (!$this->model->find($id)) {
             return $this->genericResponse(null, array("id"=>"La pelicula no existe"), 500);
         }
+        //& trim!
         $datos = $this->request->getRawInput();
         //The validate() method only returns true if it has successfully applied your rules without any of them failing.
         //aplicar otras reglas, no es obligatorio q lo rellenen todo, solo q los campos sean los q deban ser , y q los actores/directores

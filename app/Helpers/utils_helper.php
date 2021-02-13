@@ -17,5 +17,16 @@ if(!function_exists('linksHATEOAS')){
         ];
     }
 }
+if(!function_exists('trimStringArray')){
+    function trimStringArray($array){
+        $tmpArr = [];
+        foreach ($array as $key=>$value){
+            if(is_string($value) ){
+                $tmpArr[$key] = trim($value);
+            }
+        }
+        return $tmpArr;
+    }
+}
 
 ?>
