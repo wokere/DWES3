@@ -43,8 +43,8 @@ class Peliculas extends ResourceController
         //como para indicar en las tablas de relacion la pelicula ya ha debido estar introducida
         //debo comprobar primero si el id del actor o director existe antes de crear la pelicula para
         //que no se de el caso de que, al no existir, cree la pelicula y luego de error al crear los otros,
-        //aprovecho las reglas de peliculaNueva para hacer la comprobación con una customRule
-        //tambien comprobamos que no exista la pelicula en la bbdd. Aunque creo que eso se solucionaria usando save()
+        //aprovecho las reglas de peliculaNueva para hacer la comprobación con una is_not_unique
+        //tambien comprobamos que no exista la pelicula en la bbdd. Aunque creo que eso se solucionaria tambien usando save()
         //en lugar de create
         if ($this->validate("peliculaNueva")) {
             $trimmedPost = trimStringArray($this->request->getPost());
@@ -58,6 +58,7 @@ class Peliculas extends ResourceController
                 ]);
             }
             if ($this->request->getVar('actores')) {
+                //eliminar ids repetidas de actores
                 $idsactores = $this->request->getPost('actores');
                 $modelPelAct = new PeliculaActorModel();
                 foreach ($idsactores as $idactor) {
@@ -68,8 +69,8 @@ class Peliculas extends ResourceController
                 }
             }
            
-            //insert actores en peliculas_actores
-            return $this->genericResponse($this->model->find($id), null, 200);
+            // responder con la pelicula completa con su actor y director y lo que tenga
+            return $this->show($id);
         }
         // $validation = \config\Services::validation();
         return $this->genericResponse(null, $this->validator->getErrors(), 500);

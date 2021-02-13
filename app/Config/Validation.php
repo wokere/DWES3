@@ -24,6 +24,7 @@ class Validation
 		FormatRules::class,
 		FileRules::class,
 		CreditCardRules::class,
+
 	];
 
 	/**
@@ -46,7 +47,8 @@ class Validation
 		'Pais'=>'required|min_length[2]|max_length[50]'
 	];
 	public $pelicula = [
-		'titulo'=>'required|min_length[1]|max_length[50]',
+		//aunque el is_not_unique aqui es un poco useless porque necesito hacer trim antes de mirar...
+		'titulo'=>'required|min_length[1]|max_length[50]|is_not_unique[peliculas.id]',
 		'anyo' => 'required|min_length[4]|max_length[4]',
 		'duracion'=>'required|min_length[1]|max_length[50]'
 	];
@@ -54,8 +56,8 @@ class Validation
 		'titulo'=>'required|min_length[1]|max_length[50]',
 		'anyo' => 'required|min_length[4]|max_length[4]',
 		'duracion'=>'required|min_length[1]|max_length[50]',
-		'actores.*' =>'required_without[id_director]',
-		'id_director' =>'required_without[actores]',
+		'actores.*' =>'required_without[id_director]|is_not_unique[actores.id]',
+		'id_director' =>'required_without[actores]|is_not_unique[directores.id]',
 
 	];
 
