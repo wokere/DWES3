@@ -88,6 +88,7 @@ class Peliculas extends ResourceController
             if($this->model->getByTitle(trim($datos['titulo']))){
                 return $this->genericResponse(null, "la película ya existe, no puede haber 2 nombres iguales", 500);
             }
+            //he visto que se puede indicar en el modelo un callback antes de los updates,inserts,... pero no he conseguido hacerlo funcionar.
             $this->model->update($id,trimStringArray($datos));
             return $this->show($id);
         }
