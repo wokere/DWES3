@@ -44,10 +44,8 @@ class Peliculas extends ResourceController
         //debo comprobar primero si el id del actor o director existe antes de crear la pelicula para
         //que no se de el caso de que, al no existir, cree la pelicula y luego de error al crear los otros,
         //aprovecho las reglas de peliculaNueva para hacer la comprobación con una is_not_unique
-        //tambien comprobamos que no exista la pelicula en la bbdd. Aunque creo que eso se solucionaria tambien usando save()
-        //en lugar de create
         if ($this->validate("peliculaNueva")) {
-            //aunque haya validado al no dejar ya hacer trim hay q mirar que el titulo no exista ya en la bbdd...
+            //aunque haya validado al no dejar ya hacer trim en las relgas hay q mirar que el titulo no exista ya en la bbdd...
             $trimmedPost = trimStringArray($this->request->getPost());
             if($this->model->getByTitle($trimmedPost['titulo'])){
                 return $this->genericResponse(null, "la película ya existe", 500);
@@ -86,6 +84,10 @@ class Peliculas extends ResourceController
         }
         $datos = $this->request->getRawInput();
         if ($this->validate('pelicula')) {
+            //comprobamos que el titulo no esté repetido
+            if($this->model->getByTitle(trim($datos['titulo']))){
+                return $this->genericResponse(null, "la película ya existe, no puede haber 2 nombres iguales", 500);
+            }
             $this->model->update($id,trimStringArray($datos));
             return $this->show($id);
         }
